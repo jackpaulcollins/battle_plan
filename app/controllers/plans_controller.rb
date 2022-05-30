@@ -3,11 +3,19 @@ class PlansController < ApplicationController
 
   # GET /plans or /plans.json
   def index
-    @plans = Plan.all
+    if !current_user
+      redirect_to :root
+    else
+      user_id = User.find(current_user.id).id
+      @plans = Plan.where(user: user_id)
+    end
+
+    render_to_string @plans
   end
 
   # GET /plans/1 or /plans/1.json
   def show
+    @task = Task.new(user_id: current_user)
   end
 
   # GET /plans/new

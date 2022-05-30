@@ -1,0 +1,12 @@
+<div>
+  <h3>Daily Tasks:</h3>
+  <div>
+    <ul id="plan_tasks">
+      <% @plan.tasks.each do |task| %>
+        <div class="flex flex-row">
+        <li><%= task.description %></li>
+        <div>
+      <% end %>
+    </ul>
+  </div>
+</div>
