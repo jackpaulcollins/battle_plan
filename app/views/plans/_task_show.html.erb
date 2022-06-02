@@ -3,8 +3,11 @@
   <div>
     <ul id="plan_tasks">
       <% @plan.tasks.each do |task| %>
-        <div class="flex flex-row">
-        <li><%= task.description %></li>
+        <div class="d-flex">
+          <li>
+            <%= task.description %>
+            <button>Mark Complete</button>
+          </li>
         <div>
       <% end %>
     </ul>

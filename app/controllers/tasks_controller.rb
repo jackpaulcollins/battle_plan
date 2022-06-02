@@ -4,6 +4,7 @@ class TasksController < ApplicationController
     respond_to do |format|
       if @task.save
         format.turbo_stream { render turbo_stream: turbo_stream.append('plan_tasks', "<li>#{@task.description}</li>")}
+        format.html { redirect_to plan_url(@task.plan.id) }
       end
     end
   end

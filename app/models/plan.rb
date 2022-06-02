@@ -1,4 +1,4 @@
 class Plan < ApplicationRecord
   belongs_to :user
-  has_many :tasks, dependent: :destroy
+  has_many :tasks, dependent: :delete_all
 end

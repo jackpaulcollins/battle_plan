@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  task: one
+  completed_state_at: 2022-05-30 08:16:28
+
+two:
+  task: two
+  completed_state_at: 2022-05-30 08:16:28

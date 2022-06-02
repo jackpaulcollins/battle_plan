@@ -7,6 +7,7 @@ class User < ApplicationRecord
   validate :password_contains_number
   has_many :plans, dependent: :destroy
   has_many :tasks, dependent: :destroy
+  has_many :completions, dependent: :destroy
 
   def password_uppercase
     return if !!password.match(/\p{Upper}/)
