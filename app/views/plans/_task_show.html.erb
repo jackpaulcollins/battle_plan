@@ -3,12 +3,34 @@
   <div>
     <ul id="plan_tasks">
       <% @plan.tasks.each do |task| %>
-        <div class="d-flex">
-          <li>
+      
+      <% if task.completed_for_day?(Time.now.to_date)%>
+        <li class="task-display">
+          <%= task.description %>
+          <%= form_with(url: "/completions", method: :delete, local: true) do |form|%>
+            <%= form.hidden_field "completable_id", value: task.id %>
+            <%= form.hidden_field "completable_type", value: "Task" %>
+            <%= form.hidden_field "plan_id", value: @plan.id %>
+            <%= form.submit "Mark Incomplete", class: "btn btn-danger" %>
+          <% end %>
+        </li>
+      <% else %>
+        <li class="task-display">
             <%= task.description %>
-            <button>Mark Complete</button>
+            <div>
+              <%= form_with(
+                  url: "/completions", 
+                  method: :post, 
+                  local: true
+                  ) do |form| %>
+            <%= form.hidden_field "completable_id", value: task.id %>
+            <%= form.hidden_field "completable_type", value: "Task" %>
+            <%= form.hidden_field "plan_id", value: @plan.id %>
+            <%= form.submit "Mark Complete", class: "btn btn-success" %>
+              <% end %>
+            </div>
           </li>
-        <div>
+        <% end %>
       <% end %>
     </ul>
   </div>

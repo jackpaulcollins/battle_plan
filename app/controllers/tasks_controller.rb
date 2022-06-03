@@ -3,11 +3,11 @@ class TasksController < ApplicationController
     @task = Task.new(task_params)
     respond_to do |format|
       if @task.save
-        format.turbo_stream { render turbo_stream: turbo_stream.append('plan_tasks', "<li>#{@task.description}</li>")}
-        format.html { redirect_to plan_url(@task.plan.id) }
+        format.html { redirect_to plan_url(@task.plan.id), notice: "Task added" }
       end
     end
   end
+
 private
 
   def task_params
