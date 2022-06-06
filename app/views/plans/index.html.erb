@@ -2,14 +2,16 @@
 
 <h1>Plans</h1>
 
+<% if @plans %>
 <div id="plans">
   <% @plans.each do |plan| %>
     <%= render plan %>
     streak: <%= plan.streak%>
-    <p>
-      <%= link_to "Show this plan", plan_path(plan, date: Date.today) %>
-    </p>
-  <% end %>
-</div>
+      <p>
+        <%= link_to "Show this plan", plan_path(plan, date: Date.today) %>
+      </p>
+    <% end %>
+  </div>
+<% end %>
 
 <%= link_to "New plan", new_plan_path %>
