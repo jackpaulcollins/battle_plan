@@ -1,8 +1,17 @@
 <p style="color: green"><%= notice %></p>
 
 <div>
-  <h1><%= @plan.title %></h1>
-  <%= render :partial => "task_show" %>
+  <div>
+    <%= link_to '<', plan_path(@plan, date: plan_date - 1) %>
+    <%= plan_date.to_s %>
+    <%= link_to '>', plan_path(@plan, date: plan_date + 1) %>
+  </div>
+  <% if @plan.completed_for_day?(plan_date) %>
+    <h1 class="completed-plan"><%= @plan.title %></h1>
+  <% else %>
+    <h1><%= @plan.title %></h1>
+  <% end %>
+  <%= render :partial => "task_show", locals: {object: plan_date} %>
 </div>
 
 <div>

@@ -18,6 +18,7 @@
     <%= form.text_field :description %>
     <%= form.hidden_field "user_id", value: current_user.id %>
     <%= form.hidden_field "plan_id", value: @plan.id %>
-    <%= form.submit %>
+    <%= form.submit data: { comfirm: 'Adding a task will end your streak.' } %>
+    <em>warning, adding a new task to a plan will delete your current streak if you have one.</em>
   </div>
 <% end %>

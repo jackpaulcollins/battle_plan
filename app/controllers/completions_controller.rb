@@ -1,15 +1,28 @@
 class CompletionsController < ApplicationController
+  include CompletionConcern
+
   def create
     @completion = Completion.new(
         completable_id: completion_params[:completable_id], 
         completable_type: completion_params[:completable_type],
-        completed_on: Time.new.to_date, 
+        completed_on: completion_params[:plan_date], 
         user_id: current_user.id 
       )
 
     respond_to do |format|
       if @completion.save
-        format.html { redirect_to plan_url(completion_params[:plan_id]), notice: "Task Completed." }
+        if @completion.completable_type == "Task" && 
+          does_completion_complete_plan_for_day?(completion_params[:plan_id], completion_params[:plan_date])
+          @plan_completion = Completion.new(
+            completable_id: completion_params[:plan_id], 
+            completable_type: "Plan",
+            completed_on: completion_params[:plan_date], 
+            user_id: current_user.id 
+          )
+
+          @plan_completion.save
+        end
+        format.html { redirect_to plan_path(completion_params[:plan_id], date: completion_params[:plan_date]), notice: "Task Completed." }
       else
         format.html { redirect_to :back, alert: @completion.errors.full_messages[0] }
       end
@@ -17,10 +30,14 @@ class CompletionsController < ApplicationController
   end
 
   def destroy
-    @completion = Completion.where(completable_id: completion_params[:completable_id], completable_type: completion_params[:completable_type], completed_on: Time.now.to_date).last
+    @completion = Completion.where(completable_id: completion_params[:completable_id], completable_type: completion_params[:completable_type], completed_on: completion_params[:plan_date]).last
     respond_to do |format|
       if @completion.destroy
-        format.html { redirect_to plan_url(completion_params[:plan_id]), notice: "Task marked incomplete." }
+        if @completion.completable_type == "Task" && does_destroying_completion_incomplete_plan_for_day?(completion_params[:plan_id], completion_params[:plan_date])
+          @plan_completion = Completion.where(completable_id: completion_params[:plan_id], completable_type: "Plan", completed_on: completion_params[:plan_date]).last
+          @plan_completion.destroy
+        end
+        format.html { redirect_to plan_path(completion_params[:plan_id], date: completion_params[:plan_date]), notice: "Task marked incomplete." }
       else
         format.html { redirect_to :back, alert: @completion.errors.full_messages[0] }
       end
@@ -30,6 +47,6 @@ class CompletionsController < ApplicationController
   private
 
   def completion_params
-    params.permit(:completable_id, :completable_type, :user_id, :plan_id)
+    params.permit(:completable_id, :completable_type, :user_id, :plan_id, :plan_date)
   end
 end

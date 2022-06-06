@@ -1,5 +1,13 @@
 class PlansController < ApplicationController
   before_action :set_plan, only: %i[ show edit update destroy ]
+  helper_method :plan_date
+
+  def plan_date
+    date = params[:date].presence || Date.today.to_s
+    return Date.parse date
+    rescue Date::Error
+      Date.today
+  end
 
   # GET /plans or /plans.json
   def index
@@ -74,6 +82,6 @@ class PlansController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def plan_params
-      params.require(:plan).permit(:user_id, :title)
+      params.require(:plan).permit(:user_id, :title, :date)
     end
 end

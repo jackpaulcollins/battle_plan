@@ -1,6 +1,7 @@
 class TasksController < ApplicationController
   def create
     @task = Task.new(task_params)
+    @task.plan.completions.destroy_all
     respond_to do |format|
       if @task.save
         format.html { redirect_to plan_url(@task.plan.id), notice: "Task added" }
