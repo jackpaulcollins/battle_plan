@@ -1,11 +1,39 @@
 <div>
+  <h1>Current Streak: <%= @plan.streak %></h1>
   <h3>Daily Tasks:</h3>
   <div>
     <ul id="plan_tasks">
       <% @plan.tasks.each do |task| %>
-        <div class="flex flex-row">
-        <li><%= task.description %></li>
-        <div>
+      
+      <% if task.completed_for_day?(plan_date)%>
+        <li class="task-display">
+          <%= task.description %>
+          <%= form_with(url: "/completions", method: :delete, local: true) do |form|%>
+            <%= form.hidden_field "completable_id", value: task.id %>
+            <%= form.hidden_field "completable_type", value: "Task" %>
+            <%= form.hidden_field "plan_id", value: @plan.id %>
+            <%= form.hidden_field "plan_date", value: plan_date %>
+            <%= form.submit "Mark Incomplete", class: "btn btn-danger" %>
+          <% end %>
+        </li>
+      <% else %>
+        <li class="task-display">
+            <%= task.description %>
+            <div>
+              <%= form_with(
+                  url: "/completions", 
+                  method: :post, 
+                  local: true
+                  ) do |form| %>
+            <%= form.hidden_field "completable_id", value: task.id %>
+            <%= form.hidden_field "completable_type", value: "Task" %>
+            <%= form.hidden_field "plan_id", value: @plan.id %>
+            <%= form.hidden_field "plan_date", value: plan_date %>
+            <%= form.submit "Mark Complete", class: "btn btn-success" %>
+              <% end %>
+            </div>
+          </li>
+        <% end %>
       <% end %>
     </ul>
   </div>
