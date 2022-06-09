@@ -12,7 +12,7 @@ class PlansController < ApplicationController
   # GET /plans or /plans.json
   def index
     if !current_user
-      redirect_to :root
+      redirect_to :login
     else
       user_id = User.find(current_user.id).id
       @plans = Plan.where(user: user_id)
