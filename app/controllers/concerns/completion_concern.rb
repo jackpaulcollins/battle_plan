@@ -2,6 +2,7 @@
 
 module CompletionConcern
   extend ActiveSupport::Concern
+
   def does_completion_complete_plan_for_day?(plan_id, day)
     plan = Plan.find(plan_id)
     plan.tasks.all? { |task| task.completed_for_day?(day) }
