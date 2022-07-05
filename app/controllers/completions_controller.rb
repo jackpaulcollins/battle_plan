@@ -33,7 +33,7 @@ class CompletionsController < ApplicationController
     @completion = Completion.where(completable_id: completion_params[:completable_id], completable_type: completion_params[:completable_type], completed_on: Date.parse(completion_params[:plan_date])).last
     respond_to do |format|
       if @completion.destroy
-        if @completion.completable_type == "Task" && does_destroying_completion_incomplete_plan_for_day?(completion_params[:plan_id], Date.parse(completion_params[:plan_date]))
+        if @completion.completable_type == "Task" && does_destroying_completion_incomplete_plan_for_day?(completion_params[:plan_id], completion_params[:plan_date])
           @plan_completion = Completion.where(completable_id: completion_params[:plan_id], completable_type: "Plan", completed_on: Date.parse(completion_params[:plan_date])).last
           @plan_completion.destroy
         end
